@@ -21,7 +21,7 @@
     "strictInputAccessModifiers": true,
     "strictTemplates": true
   },
-  "include": ["src", "stylelint.config.ts", "eslint.config.ts", "types/*.d.ts"],
+  "include": ["src", "stylelint.config.ts", "eslint.config.ts"],
   "files": [],
   "references": [
     {
