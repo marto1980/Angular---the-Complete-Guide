@@ -1,0 +1,15 @@
+type Task = {
+  id: string
+  userId: string
+  title: string
+  summary: string
+  dueDate: string
+}
+
+type NewTaskData = Readonly<{
+  title: string
+  summary: string
+  date: string
+}>
+
+export type { Task, NewTaskData }
