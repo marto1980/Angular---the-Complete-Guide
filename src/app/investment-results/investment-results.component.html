@@ -1,0 +1,25 @@
+<table>
+  <thead>
+    <tr>
+      <th>Year</th>
+      <th>Investment Value</th>
+      <th>Interest (Year)</th>
+      <th>Total Interest</th>
+      <th>Invested Capital</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (
+      investmentResult of investmentResultsService.investmentResults();
+      track investmentResult.year
+    ) {
+      <tr>
+        <td>{{ investmentResult.year }}</td>
+        <td>{{ investmentResult.valueEndOfYear | currency }}</td>
+        <td>{{ investmentResult.interest | currency }}</td>
+        <td>{{ investmentResult.totalInterest | currency }}</td>
+        <td>{{ investmentResult.totalAmountInvested | currency }}</td>
+      </tr>
+    }
+  </tbody>
+</table>
