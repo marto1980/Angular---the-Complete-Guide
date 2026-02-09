@@ -1,0 +1,16 @@
+<form (ngSubmit)="onSubmit()">
+  <div class="input-group">
+    @for (inputType of inputTypes; track inputType.id) {
+      <div class="input-wrapper">
+        <label [for]="inputType.id">{{ inputType.label }}</label>
+        <input
+          type="number"
+          [id]="inputType.id"
+          [name]="inputType.id"
+          [(ngModel)]="investmentResultsService.formData()[inputType.id]"
+        />
+      </div>
+    }
+    <button>CALCULATE</button>
+  </div>
+</form>
