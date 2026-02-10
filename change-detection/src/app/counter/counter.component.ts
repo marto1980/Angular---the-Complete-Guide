@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core'
+import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core'
 
 import { InfoMessageComponent } from '../info-message/info-message.component'
 
@@ -9,8 +9,20 @@ import { InfoMessageComponent } from '../info-message/info-message.component'
   styleUrl: './counter.component.css',
   imports: [InfoMessageComponent],
 })
-export class CounterComponent {
+export class CounterComponent implements OnInit {
   count = signal(0)
+  private readonly cdRef = inject(ChangeDetectorRef)
+
+  ngOnInit(): void {
+    setTimeout(() => {
+      this.count.set(0)
+    }, 4000)
+
+    setTimeout(() => {
+      console.log('Timer expired!')
+      this.cdRef.markForCheck()
+    }, 5000)
+  }
 
   get debugOutput() {
     console.log('[Counter] "debugOutput" binding re-evaluated.')
