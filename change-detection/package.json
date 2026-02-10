@@ -9,7 +9,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:change-detection": "node dist/change-detection/server/server.mjs",
-    "prepare": "husky"
+    "prepare": "cd .. && husky change-detection/.husky"
   },
   "private": true,
   "packageManager": "npm@10.9.4",
