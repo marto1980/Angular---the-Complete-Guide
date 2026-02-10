@@ -1,13 +1,12 @@
-import { Injectable, signal } from '@angular/core'
+import { Injectable } from '@angular/core'
 
 @Injectable({
   providedIn: 'root',
 })
 export class MessagesService {
-  private readonly messages = signal<string[]>([])
-  allMessages = this.messages.asReadonly()
+  messages: string[] = []
 
   addMessage(message: string) {
-    this.messages.update((prevMessages) => [...prevMessages, message])
+    this.messages = [...this.messages, message]
   }
 }

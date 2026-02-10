@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core'
+import { Component, inject } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 
 import { MessagesService } from '../messages.service'
@@ -12,7 +12,7 @@ import { MessagesService } from '../messages.service'
 })
 export class NewMessageComponent {
   private readonly messagesService = inject(MessagesService)
-  enteredText = signal('')
+  enteredText = ''
 
   get debugOutput() {
     console.log('[NewMessage] "debugOutput" binding re-evaluated.')
@@ -21,7 +21,7 @@ export class NewMessageComponent {
   }
 
   onSubmit() {
-    this.messagesService.addMessage(this.enteredText())
-    this.enteredText.set('')
+    this.messagesService.addMessage(this.enteredText)
+    this.enteredText = ''
   }
 }

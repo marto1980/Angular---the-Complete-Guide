@@ -11,7 +11,9 @@ import { MessagesService } from '../messages.service'
 })
 export class MessagesListComponent {
   private readonly messagesService = inject(MessagesService)
-  protected messages = this.messagesService.allMessages
+  protected get messages() {
+    return this.messagesService.messages
+  }
 
   get debugOutput() {
     console.log('[MessagesList] "debugOutput" binding re-evaluated.')
