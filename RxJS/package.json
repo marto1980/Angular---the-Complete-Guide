@@ -9,7 +9,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:RxJS": "node dist/RxJS/server/server.mjs",
-    "prepare": "cd .. && husky change-detection/.husky"
+    "prepare": "cd .. && husky RxJS/.husky"
   },
   "private": true,
   "packageManager": "npm@10.9.4",
