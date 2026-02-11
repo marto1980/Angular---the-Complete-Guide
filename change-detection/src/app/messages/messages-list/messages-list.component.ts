@@ -1,36 +1,20 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  inject,
-  OnInit,
-} from '@angular/core'
+import { AsyncPipe } from '@angular/common'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core'
 
 import { MessagesService } from '../messages.service'
 
 @Component({
   selector: 'app-messages-list',
   standalone: true,
+  imports: [AsyncPipe],
   templateUrl: './messages-list.component.html',
   styleUrl: './messages-list.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MessagesListComponent implements OnInit {
+export class MessagesListComponent {
   cdRef = inject(ChangeDetectorRef)
   private readonly messagesService = inject(MessagesService)
-  private readonly destroyRef = inject(DestroyRef)
-  messages: string[] = []
-
-  ngOnInit(): void {
-    const subscription = this.messagesService.messages$.subscribe((messages) => {
-      this.messages = messages
-      this.cdRef.markForCheck()
-    })
-    this.destroyRef.onDestroy(() => {
-      subscription.unsubscribe()
-    })
-  }
+  messages$ = this.messagesService.messages$
 
   get debugOutput() {
     console.log('[MessagesList] "debugOutput" binding re-evaluated.')
