@@ -15,8 +15,12 @@ export class CounterComponent implements OnInit {
 
   ngOnInit(): void {
     setTimeout(() => {
-      this.count.set(1)
+      this.count.set(0)
     }, 4000)
+
+    setTimeout(() => {
+      console.log('Timer expired!')
+    }, 5000)
   }
 
   get debugOutput() {
