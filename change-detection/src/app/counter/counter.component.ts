@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
 
 import { InfoMessageComponent } from '../info-message/info-message.component'
 
@@ -11,11 +11,11 @@ import { InfoMessageComponent } from '../info-message/info-message.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CounterComponent implements OnInit {
-  count = signal(0)
+  count = 0
 
   ngOnInit(): void {
     setTimeout(() => {
-      this.count.set(0)
+      this.count = 0
     }, 4000)
 
     setTimeout(() => {
@@ -30,10 +30,12 @@ export class CounterComponent implements OnInit {
   }
 
   onDecrement() {
-    this.count.update((prevCount) => prevCount - 1)
+    // this.count.update((prevCount) => prevCount - 1)
+    this.count = this.count - 1
   }
 
   onIncrement() {
-    this.count.update((prevCount) => prevCount + 1)
+    // this.count.update((prevCount) => prevCount + 1)
+    this.count = this.count + 1
   }
 }
