@@ -49,7 +49,7 @@
     "eslint-plugin-rxjs-x": "^0",
     "eslint-plugin-security": "^3",
     "eslint-plugin-sonarjs": "^3",
-    "eslint-plugin-unicorn": "^62",
+    "eslint-plugin-unicorn": "^63",
     "husky": "^9",
     "jiti": "^2",
     "jsdom": "^28",
