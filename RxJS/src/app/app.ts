@@ -2,19 +2,8 @@ import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core'
 import { toObservable, toSignal } from '@angular/core/rxjs-interop'
 import { interval, Observable } from 'rxjs'
 
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.html',
-  styleUrl: './app.scss',
-})
-export class App implements OnInit {
-  clickCount = signal(0)
-  clickCount$ = toObservable(this.clickCount)
-  private readonly destroyRef = inject(DestroyRef)
-  interval$ = interval(1000)
-  intervalSignal = toSignal(this.interval$, { initialValue: 0 })
-  // eslint-disable-next-line unicorn/consistent-function-scoping
-  customInterval$ = new Observable((subscriber) => {
+const createCustomInterval = () =>
+  new Observable((subscriber) => {
     // eslint-disable-next-line functional/no-let
     let count = 0
     const intervalId = setInterval(() => {
@@ -34,6 +23,19 @@ export class App implements OnInit {
     }
   })
 
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.html',
+  styleUrl: './app.scss',
+})
+export class App implements OnInit {
+  clickCount = signal(0)
+  clickCount$ = toObservable(this.clickCount)
+  private readonly destroyRef = inject(DestroyRef)
+  interval$ = interval(1000)
+  intervalSignal = toSignal(this.interval$, { initialValue: 0 })
+
+  customInterval$ = createCustomInterval()
   // constructor() {
   // effect(() => {
   //   console.log(`Clicked button ${this.clickCount().toString()} times.`)
