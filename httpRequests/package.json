@@ -8,7 +8,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:httpRequests": "node dist/httpRequests/server/server.mjs"
+    "serve:ssr:httpRequests": "node dist/httpRequests/server/server.mjs",
+    "prepare": "cd .. && husky httpRequests/.husky"
   },
   "private": true,
   "packageManager": "npm@10.9.4",

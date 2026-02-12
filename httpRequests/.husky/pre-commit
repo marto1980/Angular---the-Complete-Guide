@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+cd httpRequests
+
+npx lint-staged
+# npm test
