@@ -4,23 +4,21 @@ import { interval, Observable } from 'rxjs'
 
 const createCustomInterval = () =>
   new Observable((subscriber) => {
-    // eslint-disable-next-line functional/no-let
-    let count = 0
-    const intervalId = setInterval(() => {
+    const tick = (count: number) => {
+      const timeoutId = setTimeout(() => {
+        tick(count + 1)
+      }, 2000)
+
       if (count > 3) {
-        clearInterval(intervalId)
         subscriber.complete()
+        clearTimeout(timeoutId)
 
         return
       }
       subscriber.next({ message: `Custom Interval value ${count.toString()}` })
-      count++
-    }, 2000)
-
-    return () => {
-      clearInterval(intervalId)
-      console.log('Custom Interval cleaned up')
     }
+
+    tick(0)
   })
 
 @Component({
