@@ -1,4 +1,5 @@
-import { Component, signal } from '@angular/core'
+import { HttpClient } from '@angular/common/http'
+import { Component, inject, signal } from '@angular/core'
 
 import { Place } from '../place.model'
 import { PlacesContainerComponent } from '../places-container/places-container.component'
@@ -13,4 +14,5 @@ import { PlacesComponent } from '../places.component'
 })
 export class AvailablePlacesComponent {
   places = signal<Place[] | undefined>([])
+  httpClient = inject(HttpClient)
 }
