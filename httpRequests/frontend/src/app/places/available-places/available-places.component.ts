@@ -12,5 +12,5 @@ import { PlacesComponent } from '../places.component'
   imports: [PlacesComponent, PlacesContainerComponent],
 })
 export class AvailablePlacesComponent {
-  places = signal<Place[] | undefined>()
+  places = signal<Place[] | undefined>([])
 }
