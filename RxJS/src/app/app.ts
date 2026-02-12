@@ -1,6 +1,6 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core'
 import { toObservable, toSignal } from '@angular/core/rxjs-interop'
-import { interval } from 'rxjs'
+import { interval, Observable } from 'rxjs'
 
 @Component({
   selector: 'app-root',
@@ -13,6 +13,26 @@ export class App implements OnInit {
   private readonly destroyRef = inject(DestroyRef)
   interval$ = interval(1000)
   intervalSignal = toSignal(this.interval$, { initialValue: 0 })
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  customInterval$ = new Observable((subscriber) => {
+    // eslint-disable-next-line functional/no-let
+    let count = 0
+    const intervalId = setInterval(() => {
+      if (count > 3) {
+        clearInterval(intervalId)
+        subscriber.complete()
+
+        return
+      }
+      subscriber.next({ message: `Custom Interval value ${count.toString()}` })
+      count++
+    }, 2000)
+
+    return () => {
+      clearInterval(intervalId)
+      console.log('Custom Interval cleaned up')
+    }
+  })
 
   // constructor() {
   // effect(() => {
@@ -30,6 +50,14 @@ export class App implements OnInit {
     // this.destroyRef.onDestroy(() => {
     //   subscription.unsubscribe()
     // })
+    const customIntervalSubscription = this.customInterval$.subscribe({
+      next: (value) => {
+        console.log(value)
+      },
+      complete: () => {
+        console.log('COMPLETED!')
+      },
+    })
     const subscription = this.clickCount$.subscribe({
       next: (value) => {
         console.log(`Clicked button ${value.toString()} times.`)
@@ -37,6 +65,7 @@ export class App implements OnInit {
     })
     this.destroyRef.onDestroy(() => {
       subscription.unsubscribe()
+      customIntervalSubscription.unsubscribe()
     })
   }
 
