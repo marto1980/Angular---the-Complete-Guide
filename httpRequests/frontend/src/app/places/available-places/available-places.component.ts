@@ -42,10 +42,8 @@ export class AvailablePlacesComponent implements OnInit {
   }
 
   onSelectPlace(selectedPlace: Readonly<Place>) {
-    this.httpClient
-      .put('http://localhost:3000/user-places', {
-        placeId: selectedPlace.id,
-      })
+    this.placesService
+      .addPlaceToUserPlaces(selectedPlace)
       .pipe(takeUntilDestroyed(this.destroyRef)) // Auto-unsubcribes if component is destroyed
       .subscribe({
         next: (resData) => {

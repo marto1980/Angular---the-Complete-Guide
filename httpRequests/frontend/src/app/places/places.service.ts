@@ -45,8 +45,13 @@ export class PlacesService {
     )
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
-  addPlaceToUserPlaces(place: Readonly<Place>) {}
+  addPlaceToUserPlaces(place: Readonly<Place>) {
+    this.userPlaces.update((prevPlaces) => [...prevPlaces, place])
+
+    return this.httpClient.put('http://localhost:3000/user-places', {
+      placeId: place.id,
+    })
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
   removeUserPlace(place: Readonly<Place>) {}
