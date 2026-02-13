@@ -25,7 +25,8 @@ app.get("/places", async (req, res) => {
 
   const placesData = JSON.parse(fileContent);
 
-  res.status(200).json({ places: placesData });
+  // res.status(200).json({ places: placesData });
+  res.status(500).json();
 });
 
 app.get("/user-places", async (req, res) => {
