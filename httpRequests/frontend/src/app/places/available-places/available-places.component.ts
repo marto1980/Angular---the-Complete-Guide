@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core'
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { catchError, map, throwError } from 'rxjs'
 
 import { Place } from '../place.model'
@@ -52,5 +53,18 @@ export class AvailablePlacesComponent implements OnInit {
     this.destroyRef.onDestroy(() => {
       subscription.unsubscribe()
     })
+  }
+
+  onSelectPlace(selectedPlace: Readonly<Place>) {
+    this.httpClient
+      .put('http://localhost:3000/user-places', {
+        placeId: selectedPlace.id,
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef)) // Auto-unsubsribes if component is destroyed
+      .subscribe({
+        next: (resData) => {
+          console.log(resData)
+        },
+      })
   }
 }
