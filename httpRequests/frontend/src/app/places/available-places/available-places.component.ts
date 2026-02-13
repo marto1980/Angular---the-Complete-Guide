@@ -14,17 +14,22 @@ import { PlacesComponent } from '../places.component'
   imports: [PlacesComponent, PlacesContainerComponent],
 })
 export class AvailablePlacesComponent implements OnInit {
+  isFetching = signal(false)
   places = signal<Place[] | undefined>([])
   httpClient = inject(HttpClient)
   destroyRef = inject(DestroyRef)
 
   ngOnInit(): void {
+    this.isFetching.set(true)
     const subscription = this.httpClient
       .get<{ places: Place[] }>('http://localhost:3000/places')
       .pipe(map((resData) => resData.places))
       .subscribe({
         next: (places) => {
           this.places.set(places)
+        },
+        complete: () => {
+          this.isFetching.set(false)
         },
       })
 
