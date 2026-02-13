@@ -60,7 +60,7 @@ export class AvailablePlacesComponent implements OnInit {
       .put('http://localhost:3000/user-places', {
         placeId: selectedPlace.id,
       })
-      .pipe(takeUntilDestroyed(this.destroyRef)) // Auto-unsubsribes if component is destroyed
+      .pipe(takeUntilDestroyed(this.destroyRef)) // Auto-unsubcribes if component is destroyed
       .subscribe({
         next: (resData) => {
           console.log(resData)
