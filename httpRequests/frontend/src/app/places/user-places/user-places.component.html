@@ -7,9 +7,9 @@
     <p class="fallback-text">{{ error() }}</p>
   }
 
-  @if (places()?.length) {
+  @if (places().length) {
     <app-places [places]="places()!" />
-  } @else if (places()?.length === 0 && !error()) {
+  } @else if (places().length === 0 && !error()) {
     <p class="fallback-text">Unfortunately, no favourite places could be found.</p>
   }
 </app-places-container>
