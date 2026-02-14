@@ -1,15 +1,14 @@
 <header>
   <img src="logo.png" alt="Stylized globe" />
   <h1>PlacePicker</h1>
-  <p>
-    Create your personal collection of places you would like to visit or you
-    have visited.
-  </p>
+  <p>Create your personal collection of places you would like to visit or you have visited.</p>
 </header>
 
 <main>
+  @if (error()) {
+    <app-error-modal title="An error occurred." [message]="error()" />
+  }
   <app-available-places />
 
   <app-user-places />
 </main>
-

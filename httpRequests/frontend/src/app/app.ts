@@ -1,13 +1,17 @@
-import { Component } from '@angular/core'
-import { RouterOutlet } from '@angular/router'
+import { Component, inject } from '@angular/core'
 
 import { AvailablePlacesComponent } from './places/available-places/available-places.component'
 import { UserPlacesComponent } from './places/user-places/user-places.component'
+import { ErrorService } from './shared/error.service'
+import { ErrorModalComponent } from './shared/modal/error-modal/error-modal.component'
 
 @Component({
   selector: 'app-root',
-  imports: [AvailablePlacesComponent, RouterOutlet, UserPlacesComponent],
+  imports: [AvailablePlacesComponent, UserPlacesComponent, ErrorModalComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App {}
+export class App {
+  errorService = inject(ErrorService)
+  error = this.errorService.error
+}
