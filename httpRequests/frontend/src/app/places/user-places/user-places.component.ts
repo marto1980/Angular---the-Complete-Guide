@@ -1,4 +1,5 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core'
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 
 import { Place } from '../place.model'
 import { PlacesContainerComponent } from '../places-container/places-container.component'
@@ -21,26 +22,27 @@ export class UserPlacesComponent implements OnInit {
 
   ngOnInit(): void {
     this.isFetching.set(true)
-    const subscription = this.placesService.loadUserPlaces().subscribe({
-      complete: () => {
-        this.isFetching.set(false)
-      },
-      error: (err: Readonly<Error>) => {
-        this.error.set(err.message)
-      },
-    })
-
-    this.destroyRef.onDestroy(() => {
-      subscription.unsubscribe()
-    })
+    this.placesService
+      .loadUserPlaces()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        complete: () => {
+          this.isFetching.set(false)
+        },
+        error: (err: Readonly<Error>) => {
+          this.error.set(err.message)
+        },
+      })
   }
 
   onRemovePlace(place: Readonly<Place>) {
-    console.log('Removing place ' + place.title)
-    this.placesService.removeUserPlace(place).subscribe({
-      next: (value) => {
-        console.log(value)
-      },
-    })
+    this.placesService
+      .removeUserPlace(place)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (value) => {
+          console.log(value)
+        },
+      })
   }
 }
