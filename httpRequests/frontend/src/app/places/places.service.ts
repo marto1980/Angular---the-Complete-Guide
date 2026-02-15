@@ -68,6 +68,19 @@ export class PlacesService {
       )
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
-  removeUserPlace(place: Readonly<Place>) {}
+  removeUserPlace(place: Readonly<Place>) {
+    const prevPlaces = this.userPlaces()
+    this.userPlaces.set(prevPlaces.filter((prevPlace) => prevPlace.id !== place.id))
+
+    return this.httpClient.delete(`http://localhost:3000/user-places/${place.id}`).pipe(
+      catchError((err) => {
+        console.log(err)
+
+        this.userPlaces.set(prevPlaces)
+        this.errorService.showError(`Error removing ${place.title}.`)
+
+        return throwError(() => new Error(`Error removing ${place.title}.`))
+      }),
+    )
+  }
 }

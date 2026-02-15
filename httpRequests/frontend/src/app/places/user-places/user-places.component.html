@@ -8,7 +8,7 @@
   }
 
   @if (places().length) {
-    <app-places [places]="places()!" />
+    <app-places [places]="places()!" (selectPlace)="onRemovePlace($event)" />
   } @else if (places().length === 0 && !error()) {
     <p class="fallback-text">Unfortunately, no favourite places could be found.</p>
   }
