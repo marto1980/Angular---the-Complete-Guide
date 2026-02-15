@@ -8,7 +8,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:forms": "node dist/forms/server/server.mjs"
+    "serve:ssr:forms": "node dist/forms/server/server.mjs",
+    "prepare": "cd .. && husky forms/.husky"
   },
   "private": true,
   "packageManager": "npm@10.9.4",
