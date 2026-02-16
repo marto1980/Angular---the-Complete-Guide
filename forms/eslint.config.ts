@@ -94,6 +94,7 @@ export default defineConfig([
       'unicorn/prevent-abbreviations': 'off',
       'unicorn/no-array-for-each': 'off',
       'unicorn/prefer-top-level-await': 'off',
+      'unicorn/no-null': 'off',
 
       // Functional rules
       'functional/no-return-void': 'off', // Allow void return types

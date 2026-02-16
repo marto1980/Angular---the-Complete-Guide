@@ -9,9 +9,7 @@ import {
 } from '@angular/forms'
 
 const mustContainQuestionMark: ValidatorFn = (control: Readonly<AbstractControl>) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-  if (control.value.includes('?')) {
-    // eslint-disable-next-line unicorn/no-null
+  if (typeof control.value === 'string' && control.value.includes('?')) {
     return null
   }
 
