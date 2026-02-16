@@ -1,5 +1,22 @@
 import { Component } from '@angular/core'
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms'
+
+const mustContainQuestionMark: ValidatorFn = (control: Readonly<AbstractControl>) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+  if (control.value.includes('?')) {
+    // eslint-disable-next-line unicorn/no-null
+    return null
+  }
+
+  return { doesNotContainQuestionMark: true }
+}
 
 @Component({
   selector: 'app-login',
@@ -10,7 +27,9 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 export class LoginComponent {
   form = new FormGroup({
     email: new FormControl('', { validators: [Validators.email, Validators.required] }),
-    password: new FormControl('', { validators: [Validators.required, Validators.minLength(6)] }),
+    password: new FormControl('', {
+      validators: [Validators.required, Validators.minLength(6), mustContainQuestionMark],
+    }),
   })
 
   get isEmailInvalid() {
