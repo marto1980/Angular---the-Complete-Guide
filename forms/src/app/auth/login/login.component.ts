@@ -1,4 +1,4 @@
-import { afterNextRender, Component, viewChild } from '@angular/core'
+import { afterNextRender, Component, DestroyRef, inject, viewChild } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { FormsModule, NgForm } from '@angular/forms'
 import { debounceTime } from 'rxjs'
@@ -11,15 +11,34 @@ import { debounceTime } from 'rxjs'
 })
 export class LoginComponent {
   form = viewChild<NgForm>('form')
+  destroyRef = inject(DestroyRef)
 
   constructor() {
     afterNextRender(() => {
+      const savedForm = globalThis.localStorage.getItem('saved-login-form')
+
+      if (savedForm) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const loadedFormData = JSON.parse(savedForm)
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+        const savedEmail = loadedFormData.email
+
+        setTimeout(() => {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          this.form()?.setValue({ email: savedEmail, password: '' })
+        }, 1)
+      }
+
       this.form()
         ?.valueChanges?.pipe(debounceTime(500))
-        .pipe(takeUntilDestroyed())
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: (value) => {
-            globalThis.localStorage.setItem('saved-login-form', JSON.stringify(value))
+            globalThis.localStorage.setItem(
+              'saved-login-form',
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+              JSON.stringify({ email: value.email }),
+            )
           },
         })
     })
