@@ -88,6 +88,7 @@ export default defineConfig([
       '@typescript-eslint/prefer-readonly': 'warn', // Enforce immutability where possible
       '@typescript-eslint/no-floating-promises': 'error', // Ensure unhandled promises are caught
       '@typescript-eslint/no-extraneous-class': 'off',
+      '@typescript-eslint/unbound-method': ['error', { ignoreStatic: true }],
 
       // Unicorn rules
       'unicorn/prevent-abbreviations': 'off',
