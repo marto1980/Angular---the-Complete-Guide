@@ -1,12 +1,14 @@
 import { Component } from '@angular/core'
 import {
   AbstractControl,
+  AsyncValidatorFn,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   ValidatorFn,
   Validators,
 } from '@angular/forms'
+import { of } from 'rxjs'
 
 const mustContainQuestionMark: ValidatorFn = (control: Readonly<AbstractControl>) => {
   if (typeof control.value === 'string' && control.value.includes('?')) {
@@ -14,6 +16,14 @@ const mustContainQuestionMark: ValidatorFn = (control: Readonly<AbstractControl>
   }
 
   return { doesNotContainQuestionMark: true }
+}
+
+const emailIsUnique: AsyncValidatorFn = (control: Readonly<AbstractControl>) => {
+  if (control.value !== 'test@example.com') {
+    return of(null)
+  }
+
+  return of({ notUnique: true })
 }
 
 @Component({
@@ -24,7 +34,10 @@ const mustContainQuestionMark: ValidatorFn = (control: Readonly<AbstractControl>
 })
 export class LoginComponent {
   form = new FormGroup({
-    email: new FormControl('', { validators: [Validators.email, Validators.required] }),
+    email: new FormControl('', {
+      validators: [Validators.email, Validators.required],
+      asyncValidators: [emailIsUnique],
+    }),
     password: new FormControl('', {
       validators: [Validators.required, Validators.minLength(6), mustContainQuestionMark],
     }),
