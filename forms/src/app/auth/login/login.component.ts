@@ -1,5 +1,7 @@
-import { Component } from '@angular/core'
+import { afterNextRender, Component, viewChild } from '@angular/core'
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { FormsModule, NgForm } from '@angular/forms'
+import { debounceTime } from 'rxjs'
 
 @Component({
   selector: 'app-login',
@@ -8,6 +10,21 @@ import { FormsModule, NgForm } from '@angular/forms'
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
+  form = viewChild<NgForm>('form')
+
+  constructor() {
+    afterNextRender(() => {
+      this.form()
+        ?.valueChanges?.pipe(debounceTime(500))
+        .pipe(takeUntilDestroyed())
+        .subscribe({
+          next: (value) => {
+            globalThis.localStorage.setItem('saved-login-form', JSON.stringify(value))
+          },
+        })
+    })
+  }
+
   onSubmit(formData: Readonly<NgForm>) {
     console.log(formData)
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -16,5 +33,6 @@ export class LoginComponent {
     if (formData.form.invalid) {
       return
     }
+    formData.form.reset()
   }
 }
