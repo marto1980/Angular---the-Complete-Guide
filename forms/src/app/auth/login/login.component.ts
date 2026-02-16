@@ -8,7 +8,9 @@ import { FormsModule, NgForm } from '@angular/forms'
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  onSubmit(form: Readonly<NgForm>) {
-    console.log(form)
+  onSubmit(formData: Readonly<NgForm>) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const { email: enteredEmail, password: enteredPassword } = formData.form.value
+    console.log(enteredEmail, enteredPassword)
   }
 }
