@@ -1,15 +1,18 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core'
+import { RouterLink } from '@angular/router'
 
-import { type User } from './user.model';
+import { type User } from './user.model'
 
 @Component({
   selector: 'app-user',
+  imports: [RouterLink],
   standalone: true,
   templateUrl: './user.component.html',
   styleUrl: './user.component.css',
 })
 export class UserComponent {
-  user = input.required<User>();
+  user = input.required<User>()
 
-  imagePath = computed(() => 'users/' + this.user().avatar);
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  imagePath = computed(() => 'users/' + this.user().avatar)
 }
