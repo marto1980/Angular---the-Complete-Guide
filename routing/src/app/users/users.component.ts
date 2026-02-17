@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core'
 
-import { UserComponent } from './user/user.component';
-import { UsersService } from './users.service';
+import { UserComponent } from './user/user.component'
+import { UsersService } from './users.service'
 
 @Component({
   selector: 'app-users',
@@ -11,6 +11,6 @@ import { UsersService } from './users.service';
   imports: [UserComponent],
 })
 export class UsersComponent {
-  private usersService = inject(UsersService);
-  users = this.usersService.users;
+  private readonly usersService = inject(UsersService)
+  users = this.usersService.users
 }
