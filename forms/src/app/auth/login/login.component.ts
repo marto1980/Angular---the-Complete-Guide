@@ -1,4 +1,5 @@
-import { Component } from '@angular/core'
+import { Component, DestroyRef, inject, OnInit } from '@angular/core'
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import {
   AbstractControl,
   AsyncValidatorFn,
@@ -8,7 +9,7 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms'
-import { of } from 'rxjs'
+import { debounceTime, of } from 'rxjs'
 
 const mustContainQuestionMark: ValidatorFn = (control: Readonly<AbstractControl>) => {
   if (typeof control.value === 'string' && control.value.includes('?')) {
@@ -26,13 +27,16 @@ const emailIsUnique: AsyncValidatorFn = (control: Readonly<AbstractControl>) => 
   return of({ notUnique: true })
 }
 
+const isSavedForm = (value: unknown): value is { email: string } =>
+  !!value && typeof value === 'object' && 'email' in value && typeof value.email === 'string'
+
 @Component({
   selector: 'app-login',
   imports: [ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   form = new FormGroup({
     email: new FormControl('', {
       validators: [Validators.email, Validators.required],
@@ -42,6 +46,24 @@ export class LoginComponent {
       validators: [Validators.required, Validators.minLength(6), mustContainQuestionMark],
     }),
   })
+
+  private readonly destroyRef = inject(DestroyRef)
+
+  ngOnInit(): void {
+    const savedForm = globalThis.localStorage.getItem('saved-login-form')
+    if (savedForm) {
+      const loadedForm: unknown = JSON.parse(savedForm)
+      if (isSavedForm(loadedForm)) {
+        this.form.patchValue({ email: loadedForm.email })
+      }
+    }
+
+    this.form.valueChanges.pipe(debounceTime(500), takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (value) => {
+        globalThis.localStorage.setItem('saved-login-form', JSON.stringify({ email: value.email }))
+      },
+    })
+  }
 
   get isEmailInvalid() {
     const emailControls = this.form.controls.email
