@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+cd forms
+
+npx lint-staged
+npm run build
+# npm test
