@@ -30,6 +30,18 @@ const emailIsUnique: AsyncValidatorFn = (control: Readonly<AbstractControl>) => 
 const isSavedForm = (value: unknown): value is { email: string } =>
   !!value && typeof value === 'object' && 'email' in value && typeof value.email === 'string'
 
+const loadEmail = () => {
+  const savedForm = globalThis.localStorage.getItem('saved-login-form')
+  if (savedForm) {
+    const loadedForm: unknown = JSON.parse(savedForm)
+    if (isSavedForm(loadedForm)) {
+      return loadedForm.email
+    }
+  }
+
+  return ''
+}
+
 @Component({
   selector: 'app-login',
   imports: [ReactiveFormsModule],
@@ -38,7 +50,7 @@ const isSavedForm = (value: unknown): value is { email: string } =>
 })
 export class LoginComponent implements OnInit {
   form = new FormGroup({
-    email: new FormControl('', {
+    email: new FormControl(loadEmail(), {
       validators: [Validators.email, Validators.required],
       asyncValidators: [emailIsUnique],
     }),
@@ -50,14 +62,6 @@ export class LoginComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef)
 
   ngOnInit(): void {
-    const savedForm = globalThis.localStorage.getItem('saved-login-form')
-    if (savedForm) {
-      const loadedForm: unknown = JSON.parse(savedForm)
-      if (isSavedForm(loadedForm)) {
-        this.form.patchValue({ email: loadedForm.email })
-      }
-    }
-
     this.form.valueChanges.pipe(debounceTime(500), takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (value) => {
         globalThis.localStorage.setItem('saved-login-form', JSON.stringify({ email: value.email }))
