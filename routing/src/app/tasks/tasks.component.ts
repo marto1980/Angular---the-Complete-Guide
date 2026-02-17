@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component } from '@angular/core'
 
-import { TaskComponent } from './task/task.component';
-import { Task } from './task/task.model';
+import { TaskComponent } from './task/task.component'
+import { Task } from './task/task.model'
 
 @Component({
   selector: 'app-tasks',
@@ -11,5 +11,5 @@ import { Task } from './task/task.model';
   imports: [TaskComponent],
 })
 export class TasksComponent {
-  userTasks: Task[] = [];
+  userTasks: Task[] = []
 }
