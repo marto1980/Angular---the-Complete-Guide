@@ -1,4 +1,6 @@
-import { Component, computed, inject, input } from '@angular/core'
+import { Component, DestroyRef, inject, OnInit } from '@angular/core'
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+import { ActivatedRoute } from '@angular/router'
 
 import { UsersService } from '../users.service'
 
@@ -8,11 +10,19 @@ import { UsersService } from '../users.service'
   templateUrl: './user-tasks.component.html',
   styleUrl: './user-tasks.component.css',
 })
-export class UserTasksComponent {
-  userId = input<string>()
+export class UserTasksComponent implements OnInit {
+  userName = ''
+  private readonly activatedRoute = inject(ActivatedRoute)
   private readonly usersService = inject(UsersService)
+  destroyRef = inject(DestroyRef)
 
-  userName = computed(() => {
-    return this.usersService.users.find((user) => user.id === this.userId())?.name
-  })
+  ngOnInit(): void {
+    console.log(this.activatedRoute)
+    this.activatedRoute.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (paramMap) => {
+        this.userName =
+          this.usersService.users.find((user) => user.id === paramMap.get('userId'))?.name ?? ''
+      },
+    })
+  }
 }
