@@ -46,7 +46,7 @@ export class TasksService {
   allTasks = this.tasks.asReadonly()
 
   constructor() {
-    const tasks = localStorage.getItem('tasks')
+    const tasks = globalThis.localStorage.getItem('tasks')
 
     if (tasks) {
       const loadedTasks: unknown = JSON.parse(tasks)
@@ -77,6 +77,6 @@ export class TasksService {
   }
 
   private saveTasks() {
-    localStorage.setItem('tasks', JSON.stringify(this.tasks()))
+    globalThis.localStorage.setItem('tasks', JSON.stringify(this.tasks()))
   }
 }
