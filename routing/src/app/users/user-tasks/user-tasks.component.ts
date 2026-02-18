@@ -18,7 +18,7 @@ export class UserTasksComponent implements OnInit {
   destroyRef = inject(DestroyRef)
 
   ngOnInit(): void {
-    console.log(this.activatedRoute)
+    // console.log(this.activatedRoute)
     this.activatedRoute.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (paramMap) => {
         this.userName =

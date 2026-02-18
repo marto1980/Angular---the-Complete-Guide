@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core'
+import { isPlatformBrowser } from '@angular/common'
+import { afterNextRender, inject, Injectable, PLATFORM_ID, signal } from '@angular/core'
 
 import { type NewTaskData, Task } from './task/task.model'
 
@@ -19,6 +20,8 @@ const isTasks = (arr: unknown): arr is Task[] => {
 
 @Injectable({ providedIn: 'root' })
 export class TasksService {
+  private readonly platformId = inject(PLATFORM_ID)
+  private readonly isBrowser = isPlatformBrowser(this.platformId)
   private readonly tasks = signal([
     {
       id: 't1',
@@ -46,15 +49,18 @@ export class TasksService {
   allTasks = this.tasks.asReadonly()
 
   constructor() {
-    const tasks = globalThis.localStorage.getItem('tasks')
+    // Access localStorage only on the browser
+    afterNextRender(() => {
+      const tasks = globalThis.localStorage.getItem('tasks')
 
-    if (tasks) {
-      const loadedTasks: unknown = JSON.parse(tasks)
+      if (tasks) {
+        const loadedTasks: unknown = JSON.parse(tasks)
 
-      if (isTasks(loadedTasks)) {
-        this.tasks.set(loadedTasks)
+        if (isTasks(loadedTasks)) {
+          this.tasks.set(loadedTasks)
+        }
       }
-    }
+    })
   }
 
   addTask(taskData: Readonly<NewTaskData>, userId: string) {
@@ -77,6 +83,9 @@ export class TasksService {
   }
 
   private saveTasks() {
-    globalThis.localStorage.setItem('tasks', JSON.stringify(this.tasks()))
+    // Access localStorage only on the browser
+    if (this.isBrowser) {
+      globalThis.localStorage.setItem('tasks', JSON.stringify(this.tasks()))
+    }
   }
 }
