@@ -1,16 +1,15 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core'
 
-import { type NewTaskData } from './task/task.model';
+import { type NewTaskData } from './task/task.model'
 
 @Injectable({ providedIn: 'root' })
 export class TasksService {
-  private tasks = signal([
+  private readonly tasks = signal([
     {
       id: 't1',
       userId: 'u1',
       title: 'Master Angular',
-      summary:
-        'Learn all the basic and advanced features of Angular & how to apply them.',
+      summary: 'Learn all the basic and advanced features of Angular & how to apply them.',
       dueDate: '2025-12-31',
     },
     {
@@ -24,44 +23,41 @@ export class TasksService {
       id: 't3',
       userId: 'u3',
       title: 'Prepare issue template',
-      summary:
-        'Prepare and describe an issue template which will help with project management',
+      summary: 'Prepare and describe an issue template which will help with project management',
       dueDate: '2024-06-15',
     },
-  ]);
+  ])
 
-  allTasks = this.tasks.asReadonly();
+  allTasks = this.tasks.asReadonly()
 
   constructor() {
-    const tasks = localStorage.getItem('tasks');
+    const tasks = localStorage.getItem('tasks')
 
     if (tasks) {
-      this.tasks.set(JSON.parse(tasks));
+      this.tasks.set(JSON.parse(tasks))
     }
   }
 
-  addTask(taskData: NewTaskData, userId: string) {
+  addTask(taskData: Readonly<NewTaskData>, userId: string) {
     this.tasks.update((prevTasks) => [
       {
-        id: new Date().getTime().toString(),
+        id: Date.now().toString(),
         userId: userId,
         title: taskData.title,
         summary: taskData.summary,
         dueDate: taskData.date,
       },
       ...prevTasks,
-    ]);
-    this.saveTasks();
+    ])
+    this.saveTasks()
   }
 
   removeTask(id: string) {
-    this.tasks.update((prevTasks) =>
-      prevTasks.filter((task) => task.id !== id)
-    );
-    this.saveTasks();
+    this.tasks.update((prevTasks) => prevTasks.filter((task) => task.id !== id))
+    this.saveTasks()
   }
 
   private saveTasks() {
-    localStorage.setItem('tasks', JSON.stringify(this.tasks()));
+    localStorage.setItem('tasks', JSON.stringify(this.tasks()))
   }
 }
