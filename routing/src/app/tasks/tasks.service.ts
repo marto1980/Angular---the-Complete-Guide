@@ -2,20 +2,19 @@ import { Injectable, signal } from '@angular/core'
 
 import { type NewTaskData, Task } from './task/task.model'
 
-const isTasks = (obj: unknown): obj is Task[] => {
-  return (
-    Array.isArray(obj) &&
-    obj.every(
-      (task) =>
-        typeof task === 'object' &&
-        task !== null &&
-        typeof (task as Task).id === 'string' &&
-        typeof (task as Task).userId === 'string' &&
-        typeof (task as Task).title === 'string' &&
-        typeof (task as Task).summary === 'string' &&
-        typeof (task as Task).dueDate === 'string',
+const isTasks = (arr: unknown): arr is Task[] => {
+  if (Array.isArray(arr)) {
+    const obj: unknown = arr[0]
+    const taskProps = ['id', 'userId', 'title', 'summary', 'dueDate']
+
+    return (
+      typeof obj === 'object' &&
+      !!obj &&
+      taskProps.every((propName) => Object.keys(obj).includes(propName))
     )
-  )
+  }
+
+  return false
 }
 
 @Injectable({ providedIn: 'root' })
