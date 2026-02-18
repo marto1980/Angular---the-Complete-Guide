@@ -1,6 +1,6 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, RouterOutlet } from '@angular/router'
 
 import { UsersService } from '../users.service'
 
@@ -9,6 +9,7 @@ import { UsersService } from '../users.service'
   standalone: true,
   templateUrl: './user-tasks.component.html',
   styleUrl: './user-tasks.component.css',
+  imports: [RouterOutlet],
 })
 export class UserTasksComponent implements OnInit {
   userName = ''
