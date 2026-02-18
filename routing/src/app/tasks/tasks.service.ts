@@ -22,6 +22,8 @@ const isTasks = (arr: unknown): arr is Task[] => {
 export class TasksService {
   private readonly platformId = inject(PLATFORM_ID)
   private readonly isBrowser = isPlatformBrowser(this.platformId)
+  private readonly isBeingLoaded = signal(true)
+  isLoading = this.isBeingLoaded.asReadonly()
   private readonly tasks = signal([
     {
       id: 't1',
@@ -60,6 +62,7 @@ export class TasksService {
           this.tasks.set(loadedTasks)
         }
       }
+      this.isBeingLoaded.set(false)
     })
   }
 

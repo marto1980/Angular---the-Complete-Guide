@@ -16,4 +16,5 @@ export class TasksComponent {
   userTasks = computed(() => {
     return this.tasksService.allTasks().filter((task) => task.userId === this.userId())
   })
+  isLoading = this.tasksService.isLoading
 }
