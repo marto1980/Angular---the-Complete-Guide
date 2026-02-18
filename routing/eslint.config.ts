@@ -95,6 +95,7 @@ export default defineConfig([
       'unicorn/no-array-for-each': 'off',
       'unicorn/prefer-top-level-await': 'off',
       'unicorn/no-null': 'off',
+      'unicorn/consistent-function-scoping': ['error', { checkArrowFunctions: false }],
 
       // Functional rules
       'functional/no-return-void': 'off', // Allow void return types

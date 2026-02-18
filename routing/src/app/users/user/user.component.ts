@@ -13,6 +13,5 @@ import { type User } from './user.model'
 export class UserComponent {
   user = input.required<User>()
 
-  // eslint-disable-next-line unicorn/consistent-function-scoping
   imagePath = computed(() => 'users/' + this.user().avatar)
 }
