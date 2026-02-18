@@ -1,6 +1,22 @@
 import { Injectable, signal } from '@angular/core'
 
-import { type NewTaskData } from './task/task.model'
+import { type NewTaskData, Task } from './task/task.model'
+
+const isTasks = (obj: unknown): obj is Task[] => {
+  return (
+    Array.isArray(obj) &&
+    obj.every(
+      (task) =>
+        typeof task === 'object' &&
+        task !== null &&
+        typeof (task as Task).id === 'string' &&
+        typeof (task as Task).userId === 'string' &&
+        typeof (task as Task).title === 'string' &&
+        typeof (task as Task).summary === 'string' &&
+        typeof (task as Task).dueDate === 'string',
+    )
+  )
+}
 
 @Injectable({ providedIn: 'root' })
 export class TasksService {
@@ -34,7 +50,11 @@ export class TasksService {
     const tasks = localStorage.getItem('tasks')
 
     if (tasks) {
-      this.tasks.set(JSON.parse(tasks))
+      const loadedTasks: unknown = JSON.parse(tasks)
+
+      if (isTasks(loadedTasks)) {
+        this.tasks.set(loadedTasks)
+      }
     }
   }
 
