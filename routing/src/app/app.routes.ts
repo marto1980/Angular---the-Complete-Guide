@@ -3,7 +3,7 @@ import { Routes } from '@angular/router'
 import { NotFound } from './not-found/not-found'
 import { NoTaskComponent } from './tasks/no-task/no-task.component'
 import { taskRoutes } from './tasks/tasks.routes'
-import { UserTasksComponent } from './users/user-tasks/user-tasks.component'
+import { userNameResolver, UserTasksComponent } from './users/user-tasks/user-tasks.component'
 
 export const routes: Routes = [
   { path: '', component: NoTaskComponent },
@@ -13,6 +13,9 @@ export const routes: Routes = [
     children: taskRoutes,
     data: {
       message: 'Hello!',
+    },
+    resolve: {
+      userName: userNameResolver,
     },
   },
   {

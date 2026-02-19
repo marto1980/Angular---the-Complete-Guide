@@ -1,8 +1,18 @@
-import { Component, DestroyRef, inject, input, OnInit } from '@angular/core'
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
-import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router'
+import { Component, inject, input } from '@angular/core'
+import { ActivatedRouteSnapshot, ResolveFn, RouterLink, RouterOutlet } from '@angular/router'
 
 import { UsersService } from '../users.service'
+
+export const userNameResolver: ResolveFn<string> = (route: Readonly<ActivatedRouteSnapshot>) => {
+  const usersService = inject(UsersService)
+  const userId = route.paramMap.get('userId')
+
+  return (
+    usersService.users.find((user) => {
+      return user.id === userId
+    })?.name ?? ''
+  )
+}
 
 @Component({
   selector: 'app-user-tasks',
@@ -11,21 +21,7 @@ import { UsersService } from '../users.service'
   styleUrl: './user-tasks.component.css',
   imports: [RouterOutlet, RouterLink],
 })
-export class UserTasksComponent implements OnInit {
-  userName = ''
-  private readonly activatedRoute = inject(ActivatedRoute)
-  private readonly usersService = inject(UsersService)
-  destroyRef = inject(DestroyRef)
+export class UserTasksComponent {
+  userName = input<string>()
   message = input<string>()
-
-  ngOnInit(): void {
-    // console.log(this.activatedRoute)
-    console.log('Input data:', this.message())
-    this.activatedRoute.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (paramMap) => {
-        this.userName =
-          this.usersService.users.find((user) => user.id === paramMap.get('userId'))?.name ?? ''
-      },
-    })
-  }
 }
