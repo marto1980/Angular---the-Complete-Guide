@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, input, OnInit } from '@angular/core'
+import { Component, computed, DestroyRef, inject, input, OnInit, signal } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { ActivatedRoute, RouterLink } from '@angular/router'
 
@@ -15,20 +15,20 @@ import { TasksService } from './tasks.service'
 export class TasksComponent implements OnInit {
   private readonly tasksService = inject(TasksService)
   // protected order = input<'asc' | 'desc'>()
-  order?: 'asc' | 'desc'
+  order = signal<'asc' | 'desc'>('desc')
   userId = input.required<string>()
-  get userTasks() {
+  userTasks = computed(() => {
     return this.tasksService
       .allTasks()
       .filter((task) => task.userId === this.userId())
       .toSorted((a, b) => {
-        if (this.order === 'asc') {
+        if (this.order() === 'asc') {
           return a.id > b.id ? 1 : -1
         } else {
           return a.id > b.id ? -1 : 1
         }
       })
-  }
+  })
   isLoading = this.tasksService.isLoading
   activatedRoute = inject(ActivatedRoute)
   destroyRef = inject(DestroyRef)
@@ -39,7 +39,7 @@ export class TasksComponent implements OnInit {
         const orderValue = paramMap.get('order')
 
         if (orderValue && (orderValue === 'asc' || orderValue === 'desc')) {
-          this.order = orderValue
+          this.order.set(orderValue)
         }
       },
     })
