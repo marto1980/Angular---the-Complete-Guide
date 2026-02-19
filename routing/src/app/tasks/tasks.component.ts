@@ -13,6 +13,7 @@ import { TasksService } from './tasks.service'
 })
 export class TasksComponent {
   private readonly tasksService = inject(TasksService)
+  protected order = input<'asc' | 'desc'>()
   userId = input.required<string>()
   userTasks = computed(() => {
     return this.tasksService.allTasks().filter((task) => task.userId === this.userId())
