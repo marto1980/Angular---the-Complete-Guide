@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core'
+import { Component, DestroyRef, inject, input, OnInit } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router'
 
@@ -16,9 +16,11 @@ export class UserTasksComponent implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute)
   private readonly usersService = inject(UsersService)
   destroyRef = inject(DestroyRef)
+  message = input<string>()
 
   ngOnInit(): void {
     // console.log(this.activatedRoute)
+    console.log('Input data:', this.message())
     this.activatedRoute.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (paramMap) => {
         this.userName =
