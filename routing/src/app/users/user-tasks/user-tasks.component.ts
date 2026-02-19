@@ -1,5 +1,12 @@
-import { Component, inject, input } from '@angular/core'
-import { ActivatedRouteSnapshot, ResolveFn, RouterLink, RouterOutlet } from '@angular/router'
+import { Component, DestroyRef, inject, OnInit } from '@angular/core'
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+import {
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  ResolveFn,
+  RouterLink,
+  RouterOutlet,
+} from '@angular/router'
 
 import { UsersService } from '../users.service'
 
@@ -21,7 +28,18 @@ export const userNameResolver: ResolveFn<string> = (route: Readonly<ActivatedRou
   styleUrl: './user-tasks.component.css',
   imports: [RouterOutlet, RouterLink],
 })
-export class UserTasksComponent {
-  userName = input<string>()
-  message = input<string>()
+export class UserTasksComponent implements OnInit {
+  userName?: string
+  message?: string
+  destroyRef = inject(DestroyRef)
+
+  activatedRoute = inject(ActivatedRoute)
+  ngOnInit(): void {
+    this.activatedRoute.data.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (data) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        this.userName = data['userName']
+      },
+    })
+  }
 }
