@@ -1,5 +1,6 @@
-import { Component, computed, inject, input } from '@angular/core'
-import { RouterLink } from '@angular/router'
+import { Component, computed, DestroyRef, inject, input, OnInit } from '@angular/core'
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+import { ActivatedRoute, RouterLink } from '@angular/router'
 
 import { TaskComponent } from './task/task.component'
 import { TasksService } from './tasks.service'
@@ -11,12 +12,27 @@ import { TasksService } from './tasks.service'
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css',
 })
-export class TasksComponent {
+export class TasksComponent implements OnInit {
   private readonly tasksService = inject(TasksService)
-  protected order = input<'asc' | 'desc'>()
+  // protected order = input<'asc' | 'desc'>()
+  order?: 'asc' | 'desc'
   userId = input.required<string>()
   userTasks = computed(() => {
     return this.tasksService.allTasks().filter((task) => task.userId === this.userId())
   })
   isLoading = this.tasksService.isLoading
+  activatedRoute = inject(ActivatedRoute)
+  destroyRef = inject(DestroyRef)
+
+  ngOnInit(): void {
+    this.activatedRoute.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (paramMap) => {
+        const orderValue = paramMap.get('order')
+
+        if (orderValue && (orderValue === 'asc' || orderValue === 'desc')) {
+          this.order = orderValue
+        }
+      },
+    })
+  }
 }
