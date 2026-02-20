@@ -134,6 +134,12 @@ export default defineConfig([
     },
   },
   {
+    files: ['**/*-guard.ts'],
+    rules: {
+      'sonarjs/function-return-type': 'off',
+    },
+  },
+  {
     // Everything in this config object targets our HTML files (external templates,
     // and inline templates as long as we have the `processor` set on our TypeScript config above)
     files: ['**/*.html'],

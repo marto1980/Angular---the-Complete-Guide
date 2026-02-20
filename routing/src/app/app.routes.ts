@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router'
 
+import { dummyGuard } from './dummy-guard'
 import { NotFound } from './not-found/not-found'
 import { NoTaskComponent } from './tasks/no-task/no-task.component'
 import { titleResolver } from './tasks/tasks.component'
@@ -12,6 +13,7 @@ export const routes: Routes = [
     path: 'users/:userId',
     component: UserTasksComponent,
     children: taskRoutes,
+    canMatch: [dummyGuard],
     data: {
       message: 'Hello!',
     },
