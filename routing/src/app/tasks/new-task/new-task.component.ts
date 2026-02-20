@@ -16,6 +16,7 @@ export class NewTaskComponent {
   enteredTitle = signal('')
   enteredSummary = signal('')
   enteredDate = signal('')
+  isSubmitted = signal(false)
   private readonly tasksService = inject(TasksService)
   private readonly router = inject(Router)
 
@@ -28,6 +29,7 @@ export class NewTaskComponent {
       },
       this.userId(),
     )
+    this.isSubmitted.set(true)
     void this.router.navigate(['/users', this.userId(), 'tasks'], {
       replaceUrl: true,
     })
