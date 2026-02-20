@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-cd forms
+cd deferrable-views
 
 npx lint-staged
 # npm test
