@@ -1,6 +1,7 @@
 import { Component, inject, input } from '@angular/core'
-import { ActivatedRouteSnapshot, ResolveFn, RouterLink } from '@angular/router'
+import { ActivatedRouteSnapshot, ResolveFn, RouterLink, RouterStateSnapshot } from '@angular/router'
 
+import { userNameResolver } from '../users/user-tasks/user-tasks.component'
 import { TaskComponent } from './task/task.component'
 import { Task } from './task/task.model'
 import { TasksService } from './tasks.service'
@@ -21,6 +22,16 @@ export const tasksResolver: ResolveFn<Task[]> = (route: Readonly<ActivatedRouteS
     })
 
   return userTasks.length > 0 ? userTasks : []
+}
+
+export const titleResolver: ResolveFn<string> = (
+  route: Readonly<ActivatedRouteSnapshot>,
+  state: Readonly<RouterStateSnapshot>,
+) => {
+  const resolvedUserName = userNameResolver(route, state)
+  const userName = typeof resolvedUserName === 'string' ? resolvedUserName : ''
+
+  return `${userName}'s tasks`
 }
 
 @Component({
