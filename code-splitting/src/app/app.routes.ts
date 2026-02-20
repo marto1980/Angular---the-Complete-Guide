@@ -8,7 +8,6 @@ import {
   resolveUserName,
   UserTasksComponent,
 } from './users/user-tasks/user-tasks.component'
-import { routes as userRoutes } from './users/users.routes'
 
 // eslint-disable-next-line sonarjs/function-return-type
 const dummyCanMatch: CanMatchFn = () => {
@@ -33,7 +32,7 @@ export const routes: Routes = [
   {
     path: 'users/:userId', // <your-domain>/users/<uid>
     component: UserTasksComponent,
-    children: userRoutes,
+    loadChildren: () => import('./users/users.routes').then((module) => module.routes),
     canMatch: [dummyCanMatch],
     data: {
       message: 'Hello!',
