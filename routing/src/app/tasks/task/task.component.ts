@@ -1,9 +1,10 @@
-import { Component, inject, input } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common'
+import { Component, inject, input } from '@angular/core'
+import { ActivatedRoute, Router } from '@angular/router'
 
-import { type Task } from './task.model';
-import { CardComponent } from '../../shared/card/card.component';
-import { TasksService } from '../tasks.service';
+import { CardComponent } from '../../shared/card/card.component'
+import { TasksService } from '../tasks.service'
+import { type Task } from './task.model'
 
 @Component({
   selector: 'app-task',
@@ -13,10 +14,17 @@ import { TasksService } from '../tasks.service';
   imports: [DatePipe, CardComponent],
 })
 export class TaskComponent {
-  task = input.required<Task>();
-  private tasksService = inject(TasksService);
+  task = input.required<Task>()
+  private readonly tasksService = inject(TasksService)
+  activatedRoute = inject(ActivatedRoute)
+  router = inject(Router)
 
   onComplete() {
-    this.tasksService.removeTask(this.task().id);
+    this.tasksService.removeTask(this.task().id)
+    void this.router.navigate(['./'], {
+      onSameUrlNavigation: 'reload',
+      relativeTo: this.activatedRoute,
+      queryParamsHandling: 'preserve',
+    })
   }
 }

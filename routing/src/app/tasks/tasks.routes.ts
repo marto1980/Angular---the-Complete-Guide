@@ -16,7 +16,7 @@ const taskRoutes: Routes = [
     resolve: {
       userTasks: tasksResolver,
     },
-    runGuardsAndResolvers: 'paramsOrQueryParamsChange',
+    runGuardsAndResolvers: 'always',
   },
   { path: 'tasks/new', component: NewTaskComponent, canDeactivate: [canLeaveEditPageGuard] },
 ]
