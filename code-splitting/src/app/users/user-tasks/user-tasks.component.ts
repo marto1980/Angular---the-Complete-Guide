@@ -1,14 +1,13 @@
-import { Component, OnInit, inject, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core'
 import {
-  ActivatedRoute,
   ActivatedRouteSnapshot,
   ResolveFn,
   RouterLink,
   RouterOutlet,
   RouterStateSnapshot,
-} from '@angular/router';
+} from '@angular/router'
 
-import { UsersService } from '../users.service';
+import { UsersService } from '../users.service'
 
 @Component({
   selector: 'app-user-tasks',
@@ -18,8 +17,8 @@ import { UsersService } from '../users.service';
   styleUrl: './user-tasks.component.css',
 })
 export class UserTasksComponent {
-  userName = input.required<string>();
-  message = input.required<string>();
+  userName = input.required<string>()
+  message = input.required<string>()
   // private activatedRoute = inject(ActivatedRoute);
 
   // ngOnInit(): void {
@@ -32,20 +31,20 @@ export class UserTasksComponent {
 }
 
 export const resolveUserName: ResolveFn<string> = (
-  activatedRoute: ActivatedRouteSnapshot,
-  routerState: RouterStateSnapshot
+  route: Readonly<ActivatedRouteSnapshot>,
+  _state: Readonly<RouterStateSnapshot>,
 ) => {
-  const usersService = inject(UsersService);
-  const userName =
-    usersService.users.find(
-      (u) => u.id === activatedRoute.paramMap.get('userId')
-    )?.name || '';
-  return userName;
-};
+  const usersService = inject(UsersService)
+  const userName = usersService.users.find((u) => u.id === route.paramMap.get('userId'))?.name ?? ''
+
+  return userName
+}
 
 export const resolveTitle: ResolveFn<string> = (
-  activatedRoute,
-  routerState
+  route: Readonly<ActivatedRouteSnapshot>,
+  state: Readonly<RouterStateSnapshot>,
 ) => {
-  return resolveUserName(activatedRoute, routerState) + '\'s Tasks'
+  const userName = resolveUserName(route, state)
+
+  return `${typeof userName === 'string' ? userName : ''}'s Tasks`
 }
