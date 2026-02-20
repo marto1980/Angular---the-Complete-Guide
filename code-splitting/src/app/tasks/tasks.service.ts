@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common'
-import { afterNextRender, inject, Injectable, PLATFORM_ID, signal } from '@angular/core'
+import { afterNextRender, inject, PLATFORM_ID, signal } from '@angular/core'
 
 import { type NewTaskData, Task } from './task/task.model'
 
@@ -18,7 +18,6 @@ const isTasks = (arr: unknown): arr is Task[] => {
   return false
 }
 
-@Injectable({ providedIn: 'root' })
 export class TasksService {
   private readonly platformId = inject(PLATFORM_ID)
   private readonly isBrowser = isPlatformBrowser(this.platformId)
