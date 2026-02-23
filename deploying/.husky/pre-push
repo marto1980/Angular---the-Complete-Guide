@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-cd forms
+cd deploying
 
 npx lint-staged
 npm run build

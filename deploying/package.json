@@ -9,7 +9,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:routing": "node dist/routing/server/server.mjs",
-    "prepare": "cd .. && husky routing/.husky"
+    "prepare": "cd .. && husky deploying/.husky"
   },
   "private": true,
   "packageManager": "npm@10.9.4",
