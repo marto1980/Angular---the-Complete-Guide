@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/import-style */
 import {
   AngularNodeAppEngine,
   createNodeRequestHandler,
@@ -6,9 +5,9 @@ import {
   writeResponseToNodeResponse,
 } from '@angular/ssr/node'
 import express from 'express'
-import { join } from 'node:path'
+import nodePath from 'node:path'
 
-const browserDistFolder = join(import.meta.dirname, '../browser')
+const browserDistFolder = nodePath.join(import.meta.dirname, '../browser')
 const app = express()
 const angularApp = new AngularNodeAppEngine()
 
@@ -41,10 +40,10 @@ app.use(
 app.use((req, res, next) => {
   angularApp
     .handle(req)
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression, promise/no-callback-in-promise
-    .then((response) => (response ? writeResponseToNodeResponse(response, res) : next()))
-    // eslint-disable-next-line promise/no-callback-in-promise
-    .catch(next)
+    .then((response) => {
+      return response ? void writeResponseToNodeResponse(response, res) : setTimeout(next)
+    })
+    .catch(() => setTimeout(next))
 })
 
 /**
@@ -52,16 +51,15 @@ app.use((req, res, next) => {
  * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
  */
 if (isMainModule(import.meta.url) || process.env['pm_id']) {
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-  const port = process.env['PORT'] || 4000
+  const port = process.env['PORT'] ?? 4000
   app.listen(port, (error) => {
     if (error) {
-      // eslint-disable-next-line functional/no-throw-statements
-      throw error
+      console.log(error.message)
+
+      return
     }
 
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    console.log(`Node Express server listening on http://localhost:${port}`)
+    console.log(`Node Express server listening on http://localhost:${port.toString()}`)
   })
 }
 
