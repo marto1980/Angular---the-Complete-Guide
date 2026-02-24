@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-cd routing
+cd auth
 
 npx lint-staged
 npm run build
