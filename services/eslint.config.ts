@@ -54,7 +54,7 @@ export default defineConfig([
       functional.configs.stylistic,
       arrayFunc.configs.recommended,
       prettierRecommended,
-      sonarjs.configs.recommended,
+      sonarjs.configs!['recommended'],
       security.configs.recommended,
       promise.configs['flat/recommended'],
       unicorn.configs['recommended'],
