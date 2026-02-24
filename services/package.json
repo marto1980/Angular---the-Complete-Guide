@@ -9,7 +9,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:services": "node dist/services/server/server.mjs",
-    "prepare": "husky"
+    "prepare": "cd .. && husky services/.husky"
   },
   "private": true,
   "dependencies": {
