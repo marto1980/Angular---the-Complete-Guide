@@ -1,6 +1,6 @@
 # Project Handover Document
 
-**Date:** February 20, 2026
+**Date:** February 24, 2026
 **Author:** Outgoing Senior Development Engineer
 
 ## 1. Project Overview
@@ -15,33 +15,45 @@ The repository is organized into multiple independent directories. Each director
 
 ### Core Concept Modules
 
-*   **`angular-udemy/`**: The main course project or starter application.
-*   **`change-detection/`**: Demonstrations of Angular's change detection strategies (Default vs. OnPush), Zone.js, and performance optimization.
-*   **`debugging/`**: Examples and configurations for debugging Angular applications.
-*   **`deep-dive/`**: Advanced topics and deeper architectural explorations.
+*   **`angular-udemy/`**: The main course project / starter application.
+*   **`auth/`**: Implementation of Authentication patterns (Login, Signup, Guards, Interceptors).
 *   **`directives/`**: Implementation of custom attribute and structural directives.
 *   **`forms/`**: Comprehensive examples of both Template-Driven and Reactive Forms, including validation and custom form controls.
-*   **`httpRequests/`**: Examples of handling HTTP communication.
-    *   *Note:* Contains `frontend` (Angular) and likely a simple `backend` (Node/Express or similar) for API interaction.
 *   **`lifecycle/`**: Demonstrations of Angular Component Lifecycle Hooks (`ngOnInit`, `ngOnChanges`, `ngOnDestroy`, etc.).
 *   **`pipes/`**: Usage of built-in pipes and creation of custom pipes for data transformation.
 *   **`routing/`**: Configuration of the Angular Router, including nested routes, lazy loading, and route guards.
-*   **`RxJS/`**: Examples focusing on Reactive Programming with RxJS (Observables, Subjects, Operators).
 *   **`services/`**: Dependency Injection (DI) patterns, service creation, and hierarchical injectors.
 *   **`two-way-binding/`**: Examples of data binding syntax, specifically `[(ngModel)]`.
+*   **`RxJS/`**: Examples focusing on Reactive Programming with RxJS (Observables, Subjects, Operators).
+
+### Advanced & Performance Modules
+
+*   **`change-detection/`**: Demonstrations of Angular's change detection strategies (Default vs. OnPush), Zone.js, and performance optimization.
+*   **`code-splitting/`**: Techniques for optimizing bundle size, including Lazy Loading of modules and components.
+*   **`debugging/`**: Examples and configurations for debugging Angular applications.
+*   **`deep-dive/`**: Advanced topics and deeper architectural explorations.
+*   **`deferrable-views/`**: Usage of Angular 17+ Deferrable Views (`@defer`, `@placeholder`, `@loading`) for granular lazy loading.
+*   **`deploying/`**: Configurations and examples for building production-ready applications and deployment strategies.
 
 ### Application Modules
 
-*   **`finances/`**: A standalone "Investment Calculator" application, likely applying multiple concepts (forms, data binding, services) in a practical scenario.
+*   **`finances/`**: A standalone "Investment Calculator" application.
+
+### HTTP & Backend
+
+*   **`httpRequests/`**:
+    *   **`frontend/`**: Angular application demonstrating HTTP Client usage (GET, POST, Interceptors).
+    *   **`backend/`**: A Node.js/Express backend API to support the frontend examples. *Requires separate startup.*
 
 ## 3. Technology Stack
 
-*   **Framework:** Angular (Modern versions, utilizing `eslint.config.ts` suggesting v16+).
+*   **Framework:** Angular (Modern versions, utilizing `deferrable-views` implies v17+).
+*   **CLI Version:** Angular CLI ~21.x (Based on package configuration).
 *   **Language:** TypeScript.
+*   **Testing:** Vitest (replacing Karma/Jasmine in newer projects).
 *   **State Management:** Primarily Angular Services and RxJS.
 *   **Styling:** Standard CSS/SCSS (project dependent).
-*   **Linting/Formatting:** ESLint, Prettier.
-*   **Package Manager:** `npm` (indicated by `package-lock.json`).
+*   **Linting/Formatting:** ESLint (flat config), Prettier.
 
 ## 4. Getting Started
 
@@ -49,7 +61,7 @@ Since this is a collection of independent projects, you must install dependencie
 
 ### Prerequisites
 
-*   **Node.js**: Ensure a compatible LTS version is installed.
+*   **Node.js**: Ensure a compatible LTS version is installed (v18+ or v20+ recommended for newer Angular versions).
 *   **Angular CLI**: Globally installed is recommended (`npm install -g @angular/cli`).
 
 ### Installation
@@ -80,21 +92,38 @@ npm start
 
 Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
+### Special Case: HTTP Requests
+
+To fully utilize the `httpRequests` examples, you must run both the backend and frontend:
+
+1.  **Backend:**
+    ```bash
+    cd httpRequests/backend
+    npm install
+    npm start # Likely runs on port 3000 or 8080
+    ```
+2.  **Frontend:**
+    ```bash
+    cd httpRequests/frontend
+    npm install
+    ng serve
+    ```
+
 ## 5. Development Workflow
 
 Standard Angular CLI commands apply to each project individually.
 
 *   **Generate Components:** `ng generate component component-name`
 *   **Build:** `ng build` (builds the project to the `dist/` directory)
-*   **Test:** `ng test` (launches the test runner)
+*   **Test:** `ng test` (launches the Vitest runner)
 *   **Lint:** `ng lint` or `npm run lint`
 
 ## 6. Key Notes for Handover
 
 *   **Independence:** Remember that changes in one directory (e.g., `services/`) do not affect others (e.g., `routing/`). They share no common root `node_modules` or configuration.
 *   **Configuration:** Watch out for `angular.json` and `tsconfig.json` in each directory; they are tailored to that specific project's needs.
-*   **Backend:** The `httpRequests/backend` directory likely requires a separate `npm install` and `npm start` to serve the API for the frontend examples.
-*   **Modernization:** Some projects use newer tooling configurations (like flat `eslint.config.ts`), indicating they are up-to-date with recent Angular best practices.
+*   **Modern Tooling:** Note the use of `eslint.config.ts` (Flat Config) and `Vitest`, indicating a shift towards modern web development standards within the Angular ecosystem.
+*   **Root Files:** The root directory contains a `package.json` primarily for holding the global Angular CLI version, but individual projects manage their own dependencies.
 
 ## 7. Future Recommendations
 
