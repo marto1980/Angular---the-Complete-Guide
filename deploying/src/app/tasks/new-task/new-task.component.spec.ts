@@ -1,24 +1,14 @@
-/* eslint-disable functional/immutable-data */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable functional/no-let */
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
 import { provideRouter, Router } from '@angular/router'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { TasksService } from '../tasks.service'
 import { NewTaskComponent } from './new-task.component'
 
 describe('NewTaskComponent', () => {
-  let component: NewTaskComponent
-  let fixture: ComponentFixture<NewTaskComponent>
-  let tasksServiceSpy: { addTask: ReturnType<typeof vi.fn> }
-  let router: Router
-
-  beforeEach(async () => {
-    tasksServiceSpy = {
+  const setup = async () => {
+    const tasksServiceSpy = {
       addTask: vi.fn(),
     }
 
@@ -27,20 +17,39 @@ describe('NewTaskComponent', () => {
       providers: [provideRouter([]), { provide: TasksService, useValue: tasksServiceSpy }],
     }).compileComponents()
 
-    router = TestBed.inject(Router)
-    vi.spyOn(router, 'navigate').mockResolvedValue(true)
+    const router = TestBed.inject(Router)
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true)
 
-    fixture = TestBed.createComponent(NewTaskComponent)
-    component = fixture.componentInstance
+    const fixture = TestBed.createComponent(NewTaskComponent)
+    const component = fixture.componentInstance
     fixture.componentRef.setInput('userId', 'test-user-id')
     fixture.detectChanges()
-  })
 
-  it('should create', () => {
+    return { component, fixture, tasksServiceSpy, navigateSpy }
+  }
+
+  const updateInputValue = (
+    fixture: Readonly<ComponentFixture<NewTaskComponent>>,
+    selector: string,
+    value: string,
+  ) => {
+    const debugElement = fixture.debugElement.query(By.css(selector))
+    const nativeElement: unknown = debugElement.nativeElement
+
+    if (nativeElement instanceof HTMLInputElement) {
+      // eslint-disable-next-line functional/immutable-data
+      nativeElement.value = value
+      nativeElement.dispatchEvent(new Event('input'))
+    }
+  }
+
+  it('should create', async () => {
+    const { component } = await setup()
     expect(component).toBeTruthy()
   })
 
-  it('should call addTask and navigate on submit', () => {
+  it('should call addTask and navigate on submit', async () => {
+    const { component, tasksServiceSpy, navigateSpy } = await setup()
     const title = 'Test Title'
     const summary = 'Test Summary'
     const date = '2023-10-10'
@@ -62,32 +71,25 @@ describe('NewTaskComponent', () => {
 
     expect(component.isSubmitted()).toBe(true)
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(router.navigate).toHaveBeenCalledWith(['/users', 'test-user-id', 'tasks'], {
+    expect(navigateSpy).toHaveBeenCalledWith(['/users', 'test-user-id', 'tasks'], {
       replaceUrl: true,
     })
   })
 
-  it('should update signals when inputs change', () => {
-    const titleInput = fixture.debugElement.query(By.css('#title')).nativeElement
-    const summaryInput = fixture.debugElement.query(By.css('#summary')).nativeElement
-    const dateInput = fixture.debugElement.query(By.css('#due-date')).nativeElement
+  it('should update signals when inputs change', async () => {
+    const { fixture, component } = await setup()
 
-    titleInput.value = 'New Title'
-    titleInput.dispatchEvent(new Event('input'))
-
-    summaryInput.value = 'New Summary'
-    summaryInput.dispatchEvent(new Event('input'))
-
-    dateInput.value = '2023-12-31'
-    dateInput.dispatchEvent(new Event('input'))
+    updateInputValue(fixture, '#title', 'New Title')
+    updateInputValue(fixture, '#summary', 'New Summary')
+    updateInputValue(fixture, '#due-date', '2023-12-31')
 
     expect(component.enteredTitle()).toBe('New Title')
     expect(component.enteredSummary()).toBe('New Summary')
     expect(component.enteredDate()).toBe('2023-12-31')
   })
 
-  it('should call onSubmit when form is submitted', () => {
+  it('should call onSubmit when form is submitted', async () => {
+    const { fixture, component, tasksServiceSpy } = await setup()
     component.enteredTitle.set('Test Title')
     component.enteredSummary.set('Test Summary')
     component.enteredDate.set('2023-10-10')
