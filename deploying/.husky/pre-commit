@@ -3,4 +3,4 @@
 cd deploying
 
 npx lint-staged
-# npm test
+npm run test:ci

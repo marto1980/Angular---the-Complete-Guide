@@ -25,15 +25,11 @@ describe('NewTaskComponent', () => {
     }).compileComponents()
 
     const router = TestBed.inject(Router)
-    // eslint-disable-next-line functional/immutable-data
     context.navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true)
-    // eslint-disable-next-line functional/immutable-data
     context.tasksServiceSpy = tasksServiceSpy
 
     const fixture = TestBed.createComponent(NewTaskComponent)
-    // eslint-disable-next-line functional/immutable-data
     context.fixture = fixture
-    // eslint-disable-next-line functional/immutable-data
     context.component = fixture.componentInstance
 
     fixture.componentRef.setInput('userId', 'test-user-id')
@@ -48,8 +44,7 @@ describe('NewTaskComponent', () => {
     const debugElement = fixture.debugElement.query(By.css(selector))
     const nativeElement: unknown = debugElement.nativeElement
 
-    if (nativeElement instanceof HTMLInputElement) {
-      // eslint-disable-next-line functional/immutable-data
+    if (nativeElement instanceof HTMLInputElement || nativeElement instanceof HTMLTextAreaElement) {
       nativeElement.value = value
       nativeElement.dispatchEvent(new Event('input'))
     }

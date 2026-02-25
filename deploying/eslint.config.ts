@@ -140,6 +140,13 @@ export default defineConfig([
     },
   },
   {
+    files: ['**/*.spec.ts'],
+    rules: {
+      // Test files often require mutation for setup (e.g., TestBed, mocks) and assertions.
+      'functional/immutable-data': 'off',
+    },
+  },
+  {
     // Everything in this config object targets our HTML files (external templates,
     // and inline templates as long as we have the `processor` set on our TypeScript config above)
     files: ['**/*.html'],
