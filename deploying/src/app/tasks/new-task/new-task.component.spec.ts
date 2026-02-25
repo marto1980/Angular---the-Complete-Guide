@@ -1,13 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
 import { provideRouter, Router } from '@angular/router'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest'
 
 import { TasksService } from '../tasks.service'
 import { NewTaskComponent } from './new-task.component'
 
+type NewTaskComponentTestContext = {
+  component: NewTaskComponent
+  fixture: ComponentFixture<NewTaskComponent>
+  tasksServiceSpy: { addTask: ReturnType<typeof vi.fn> }
+  navigateSpy: MockInstance
+}
+
 describe('NewTaskComponent', () => {
-  const setup = async () => {
+  beforeEach<NewTaskComponentTestContext>(async (context) => {
     const tasksServiceSpy = {
       addTask: vi.fn(),
     }
@@ -18,15 +25,20 @@ describe('NewTaskComponent', () => {
     }).compileComponents()
 
     const router = TestBed.inject(Router)
-    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true)
+    // eslint-disable-next-line functional/immutable-data
+    context.navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true)
+    // eslint-disable-next-line functional/immutable-data
+    context.tasksServiceSpy = tasksServiceSpy
 
     const fixture = TestBed.createComponent(NewTaskComponent)
-    const component = fixture.componentInstance
+    // eslint-disable-next-line functional/immutable-data
+    context.fixture = fixture
+    // eslint-disable-next-line functional/immutable-data
+    context.component = fixture.componentInstance
+
     fixture.componentRef.setInput('userId', 'test-user-id')
     fixture.detectChanges()
-
-    return { component, fixture, tasksServiceSpy, navigateSpy }
-  }
+  })
 
   const updateInputValue = (
     fixture: Readonly<ComponentFixture<NewTaskComponent>>,
@@ -43,13 +55,15 @@ describe('NewTaskComponent', () => {
     }
   }
 
-  it('should create', async () => {
-    const { component } = await setup()
+  it<NewTaskComponentTestContext>('should create', ({ component }) => {
     expect(component).toBeTruthy()
   })
 
-  it('should call addTask and navigate on submit', async () => {
-    const { component, tasksServiceSpy, navigateSpy } = await setup()
+  it<NewTaskComponentTestContext>('should call addTask and navigate on submit', ({
+    component,
+    tasksServiceSpy,
+    navigateSpy,
+  }) => {
     const title = 'Test Title'
     const summary = 'Test Summary'
     const date = '2023-10-10'
@@ -76,9 +90,10 @@ describe('NewTaskComponent', () => {
     })
   })
 
-  it('should update signals when inputs change', async () => {
-    const { fixture, component } = await setup()
-
+  it<NewTaskComponentTestContext>('should update signals when inputs change', ({
+    fixture,
+    component,
+  }) => {
     updateInputValue(fixture, '#title', 'New Title')
     updateInputValue(fixture, '#summary', 'New Summary')
     updateInputValue(fixture, '#due-date', '2023-12-31')
@@ -88,8 +103,11 @@ describe('NewTaskComponent', () => {
     expect(component.enteredDate()).toBe('2023-12-31')
   })
 
-  it('should call onSubmit when form is submitted', async () => {
-    const { fixture, component, tasksServiceSpy } = await setup()
+  it<NewTaskComponentTestContext>('should call onSubmit when form is submitted', ({
+    fixture,
+    component,
+    tasksServiceSpy,
+  }) => {
     component.enteredTitle.set('Test Title')
     component.enteredSummary.set('Test Summary')
     component.enteredDate.set('2023-10-10')
